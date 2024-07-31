@@ -348,6 +348,10 @@ footer p {
     width: 60px;
     height: 100px;
   }
+
+  #trash{
+    bottom: 60px
+  }
 }
 
 /* Medium (md) */
@@ -374,6 +378,7 @@ footer p {
     width: 90px;
     height: 150px;
   }
+
 }
 
 /* Extra Large (xl) */
@@ -387,6 +392,7 @@ footer p {
     width: 110px;
     height: 180px;
   }
+
 }
 
 /* 2XL (2xl) */

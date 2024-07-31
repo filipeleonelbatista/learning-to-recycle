@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function animatedReverse() {    
+  function animatedReverse() {
     overlay.classList.remove("hidden");
     overlay.classList.add("active");
 
@@ -177,6 +177,41 @@ document.addEventListener("DOMContentLoaded", function () {
     currentItems.push(itemElement);
   }
 
+  function checkDrop(e) {
+    const touch = e.changedTouches[0];
+
+    trashBins.forEach(bin => {
+      const binRect = bin.getBoundingClientRect();
+      if (
+        touch.clientX >= binRect.left &&
+        touch.clientX <= binRect.right &&
+        touch.clientY >= binRect.top &&
+        touch.clientY <= binRect.bottom
+      ) {
+
+        const binType = bin.id;
+        const itemRect = touch.target.getAttribute('data-type')
+
+        console.log("item", itemRect, "lixo", binType, )
+
+        if (itemRect === binType) {
+          updateScore(1);
+          sound.play();
+          bin.classList.add('correct');
+          setTimeout(() => bin.classList.remove('correct'), 500);
+          removeItem(itemRect);
+          generateRandomItem();
+        } else {
+          updateScore(-1);
+          errorSound.play();
+          updateLives();
+          bin.classList.add('wrong');
+          setTimeout(() => bin.classList.remove('wrong'), 500);
+        }
+      }
+    });
+  }
+
   function makeItemDraggable(item) {
     item.addEventListener('dragstart', function (e) {
       e.dataTransfer.setData('text/plain', item.getAttribute('data-type'));
@@ -186,6 +221,50 @@ document.addEventListener("DOMContentLoaded", function () {
     item.addEventListener('dragend', function () {
       item.classList.remove('hide');
     });
+
+    item.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const offsetX = touch.clientX - item.getBoundingClientRect().left;
+      const offsetY = touch.clientY - item.getBoundingClientRect().top;
+
+      function handleTouchMove(e) {
+        const touch = e.touches[0];
+        item.style.position = 'absolute';
+        item.style.left = `${touch.clientX - offsetX}px`;
+        item.style.top = `${touch.clientY - offsetY}px`;
+      }
+
+      function handleTouchEnd(e) {
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+        // Verifica se o item está sobre uma lixeira
+        checkDrop(e);
+      }
+
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+    });
+  }
+
+  function handleDrop(e) {
+    const itemType = e.dataTransfer.getData('text/plain');
+    const binType = e.target.getAttribute('id');
+
+    if (itemType === binType) {
+      updateScore(1);
+      sound.play();
+      e.target.classList.add('correct');
+      setTimeout(() => e.target.classList.remove('correct'), 500);
+      removeItem(itemType);
+      generateRandomItem();
+    } else {
+      updateScore(-1);
+      errorSound.play();
+      updateLives();
+      e.target.classList.add('wrong');
+      setTimeout(() => e.target.classList.remove('wrong'), 500);
+    }
   }
 
   trashBins.forEach(bin => {
@@ -195,24 +274,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     bin.addEventListener('drop', function (e) {
       e.preventDefault();
-      const itemType = e.dataTransfer.getData('text/plain');
-      const binType = bin.getAttribute('id');
+      handleDrop(e);
+    });
 
-      if (itemType === binType) {
-        updateScore(1);
-        sound.play();
-        bin.classList.add('correct');
-        setTimeout(() => bin.classList.remove('correct'), 500);
+    bin.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+    });
 
-        removeItem(itemType);
-        generateRandomItem();
-      } else {
-        updateScore(-1);
-        errorSound.play();
-        updateLives();
-        bin.classList.add('wrong');
-        setTimeout(() => bin.classList.remove('wrong'), 500);
-      }
+    bin.addEventListener('touchend', function (e) {
+      e.preventDefault();
     });
   });
 
@@ -224,12 +294,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  playButton.addEventListener('click', function () {
-    playButton.classList.add('clicked');
+  playButton.addEventListener('click', handlePlayButtonClick);
+  playButton.addEventListener('touchstart', handlePlayButtonClick);
 
+  backButton.addEventListener('click', handleBackButtonClick);
+  backButton.addEventListener('touchstart', handleBackButtonClick);
+
+  function handlePlayButtonClick(e) {
+    e.preventDefault();
+    playButton.classList.add('clicked');
     setTimeout(function () {
       playButton.classList.remove('clicked');
-
       fadeOutSound.play();
       overlay.classList.remove('hidden');
       animatedReverse()
@@ -243,16 +318,15 @@ document.addEventListener("DOMContentLoaded", function () {
           startThemeMusic();
         }, 500);
       }, 1500);
-
     }, 200);
-  });
+  }
 
-  backButton.addEventListener('click', function () {
-    clearInterval(intervalId); // Interrompe o temporizador
+  function handleBackButtonClick(e) {
+    e.preventDefault();
+    clearInterval(intervalId);
 
     setTimeout(function () {
       backButton.classList.remove('clicked');
-
       fadeOutSound.play();
       menu.classList.add('show');
       main.classList.add('transition');
@@ -269,12 +343,11 @@ document.addEventListener("DOMContentLoaded", function () {
           resetGame(); // Inicia o jogo
         }, 500);
       }, 1500);
-
     }, 200);
-
 
     themeMusic.pause();
     themeMusic.currentTime = 0;
-  });
+  }
+
 
 });
