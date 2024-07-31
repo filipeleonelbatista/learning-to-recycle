@@ -13,7 +13,7 @@
 
 ## 🔖&nbsp; About
 
-Application for sending bulk messages using Electron and React JS with Material UI to create the message and the sending lists, and it uses Selenium to perform the dispatches. It uses the Hygraph API to authenticate the tool.
+Jogo criado para treinar habilidades utilizando apenas HTML puro, CSS e JS para ensinar as crianças de forma lúdica a separar o lixo.
 
 [Website Link](https://filipeleonelbatista.github.io/learning-to-recycle/)
 
