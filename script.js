@@ -84,11 +84,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateTimer() {
-    // timer--;
-    // timerElement.textContent = `Time: ${timer}s`;
-    // if (timer <= 0) {
-    //   endGame(true);
-    // }
+    timer--;
+    timerElement.textContent = `Time: ${timer}s`;
+    if (timer <= 0) {
+      endGame(true);
+    }
   }
 
   function endGame(success = true) {
