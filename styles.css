@@ -258,7 +258,7 @@ body {
   width: 100%;
   gap: 5px;
   position: absolute;
-  bottom: 160px;
+  bottom: 135px;
   z-index: 100;
 }
 
@@ -348,10 +348,6 @@ footer p {
     width: 60px;
     height: 100px;
   }
-
-  #trash{
-    bottom: 60px
-  }
 }
 
 /* Medium (md) */
@@ -378,7 +374,6 @@ footer p {
     width: 90px;
     height: 150px;
   }
-
 }
 
 /* Extra Large (xl) */
@@ -392,7 +387,6 @@ footer p {
     width: 110px;
     height: 180px;
   }
-
 }
 
 /* 2XL (2xl) */

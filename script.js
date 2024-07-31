@@ -84,11 +84,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateTimer() {
-    timer--;
-    timerElement.textContent = `Time: ${timer}s`;
-    if (timer <= 0) {
-      endGame(true);
-    }
+    // timer--;
+    // timerElement.textContent = `Time: ${timer}s`;
+    // if (timer <= 0) {
+    //   endGame(true);
+    // }
   }
 
   function endGame(success = true) {
@@ -191,8 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const binType = bin.id;
         const itemRect = touch.target.getAttribute('data-type')
-
-        console.log("item", itemRect, "lixo", binType, )
 
         if (itemRect === binType) {
           updateScore(1);
